@@ -67,10 +67,11 @@ def run_query(query: str, search: HybridSearch, reranker: CrossEncoderReranker) 
     from config import OPENAI_API_KEY
     if OPENAI_API_KEY and contexts:
         try:
+            import os
             from openai import OpenAI
             client = OpenAI()
             context_str = "\n\n".join(contexts)
-            resp = client.chat.completions.create(model="gpt-4o-mini", messages=[
+            resp = client.chat.completions.create(model=os.getenv("DEFAULT_MODEL", "gpt-4o-mini"), messages=[
                 {"role": "system", "content": "Trả lời CHỈ dựa trên context. Nếu không có → nói 'Không tìm thấy.'"},
                 {"role": "user", "content": f"Context:\n{context_str}\n\nCâu hỏi: {query}"},
             ])
